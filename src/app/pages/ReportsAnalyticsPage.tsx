@@ -3,7 +3,6 @@ import { motion } from 'motion/react';
 import {
   ArrowLeft,
   Search,
-  Filter,
   Download,
   Users,
   TrendingUp,
@@ -13,7 +12,6 @@ import {
   Award,
   Calendar as CalendarIcon,
   PieChart as PieChartIcon,
-  CheckCircle2,
   DollarSign,
   Briefcase,
   Activity,
@@ -37,9 +35,7 @@ import {
   TableHeader,
   TableRow,
 } from '../components/ui/table';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
-import { StatCard } from '../components/dashboard/StatCard';
 import {
   AreaChart,
   Area,
@@ -129,54 +125,79 @@ export function ReportsAnalyticsPage({ onBack }: { onBack: () => void }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
+      animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+      transition={{ duration: 0.6 }}
       className="space-y-6"
     >
       {/* Page Header */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={onBack}>
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={onBack}
+            className="h-9 w-9 rounded-xl flex items-center justify-center text-muted-foreground hover:text-foreground border border-white/10 bg-white/5 cursor-pointer"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </motion.button>
           <div>
-            <h1 className="text-3xl font-bold">Reports & Analytics</h1>
-            <p className="text-muted-foreground">Monitor business performance, employee insights, and enterprise productivity</p>
+            <h1 className="text-2xl font-bold flex items-center gap-2 text-foreground">
+              <BarChart3 className="h-7 w-7 text-blue-400" /> Reports & Analytics
+            </h1>
+            <p className="text-sm text-muted-foreground mt-0.5">Monitor business performance, employee insights, and enterprise productivity</p>
           </div>
         </div>
-        <div className="flex items-center gap-3 flex-wrap">
-          <Button variant="outline" className="gap-2" onClick={handleExportPDF}>
-            <Download className="h-4 w-4" />
+        <div className="flex items-center gap-2.5 flex-wrap">
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={handleExportPDF}
+            className="gap-2 rounded-xl h-11 px-4 text-white border border-white/10 bg-white/5 hover:bg-white/10 transition-colors font-semibold flex items-center justify-center cursor-pointer"
+          >
+            <Download className="h-4 w-4 text-muted-foreground" />
             <span>Export PDF</span>
-          </Button>
-          <Button variant="outline" className="gap-2" onClick={handleExportExcel}>
-            <FileSpreadsheet className="h-4 w-4 text-emerald-500" />
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={handleExportExcel}
+            className="gap-2 rounded-xl h-11 px-4 text-white border border-white/10 bg-white/5 hover:bg-white/10 transition-colors font-semibold flex items-center justify-center cursor-pointer"
+          >
+            <FileSpreadsheet className="h-4 w-4 text-emerald-400" />
             <span>Export Excel</span>
-          </Button>
-          <Button className="gap-2" onClick={handleGenerate}>
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.02, boxShadow: '0 0 25px rgba(59,130,246,0.4)' }}
+            whileTap={{ scale: 0.98 }}
+            onClick={handleGenerate}
+            className="gap-2 rounded-xl h-11 px-5 text-white font-semibold flex items-center justify-center cursor-pointer"
+            style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)' }}
+          >
             <BarChart3 className="h-4 w-4" />
             <span>Generate Report</span>
-          </Button>
+          </motion.button>
         </div>
       </div>
 
       {/* Top Control Section */}
-      <Card className="bg-card">
-        <CardContent className="p-4 grid gap-4 md:grid-cols-2 lg:grid-cols-4 items-center">
-          <div className="relative">
+      <div className="glass-card p-4 relative overflow-hidden">
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 items-center">
+          <div className="relative rounded-xl" style={{ border: '1px solid rgba(255,255,255,0.08)' }}>
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search reports..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9 bg-input-background"
+              className="pl-9 rounded-xl bg-white/5 border-0 text-white placeholder:text-slate-500 focus-visible:ring-0 focus-visible:ring-offset-0 h-10"
             />
           </div>
           <Select value={deptFilter} onValueChange={setDeptFilter}>
-            <SelectTrigger>
+            <SelectTrigger className="rounded-xl bg-white/5 border-white/10 text-white h-10 focus:ring-0 focus:ring-offset-0">
               <SelectValue placeholder="Department Filter" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-slate-900 border-white/10 text-white rounded-xl">
               <SelectItem value="all">All Departments</SelectItem>
               <SelectItem value="Engineering">Engineering</SelectItem>
               <SelectItem value="Design">Design</SelectItem>
@@ -186,10 +207,10 @@ export function ReportsAnalyticsPage({ onBack }: { onBack: () => void }) {
             </SelectContent>
           </Select>
           <Select value={reportType} onValueChange={setReportType}>
-            <SelectTrigger>
+            <SelectTrigger className="rounded-xl bg-white/5 border-white/10 text-white h-10 focus:ring-0 focus:ring-offset-0">
               <SelectValue placeholder="Report Type" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-slate-900 border-white/10 text-white rounded-xl">
               <SelectItem value="all">All Report Types</SelectItem>
               <SelectItem value="financial">Financial & Revenue</SelectItem>
               <SelectItem value="productivity">Employee Productivity</SelectItem>
@@ -197,77 +218,69 @@ export function ReportsAnalyticsPage({ onBack }: { onBack: () => void }) {
               <SelectItem value="projects">Project Progress</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline" className="w-full gap-2" onClick={() => toast.info('Date picker range selected: Aug 1 - Aug 31, 2026')}>
-            <CalendarIcon className="h-4 w-4" /> Aug 1 - Aug 31, 2026
-          </Button>
-        </CardContent>
-      </Card>
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="w-full gap-2 rounded-xl bg-white/5 border border-white/10 text-white h-10 text-xs font-semibold flex items-center justify-center cursor-pointer hover:bg-white/10"
+            onClick={() => toast.info('Date picker range selected: Aug 1 - Aug 31, 2026')}
+          >
+            <CalendarIcon className="h-4 w-4 text-blue-400" /> Aug 1 - Aug 31, 2026
+          </motion.button>
+        </div>
+      </div>
 
       {/* Dashboard Summary Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-        <StatCard
-          title="Total Employees"
-          value="67"
-          icon={Users}
-          trend={{ value: 12, isPositive: true }}
-          description="Active workforce"
-        />
-        <StatCard
-          title="Active Projects"
-          value="28"
-          icon={Briefcase}
-          trend={{ value: 8, isPositive: true }}
-          description="Ongoing client work"
-        />
-        <StatCard
-          title="Attendance Rate"
-          value="95.4%"
-          icon={Clock}
-          trend={{ value: 3.2, isPositive: true }}
-          description="Monthly average"
-        />
-        <StatCard
-          title="Leave Requests"
-          value="24"
-          icon={FileText}
-          trend={{ value: 5, isPositive: false }}
-          description="Pending & Approved"
-        />
-        <StatCard
-          title="Performance Score"
-          value="4.85"
-          icon={Award}
-          trend={{ value: 4.1, isPositive: true }}
-          description="Out of 5.0 rating"
-        />
-        <StatCard
-          title="Monthly Productivity"
-          value="94%"
-          icon={Activity}
-          trend={{ value: 6.5, isPositive: true }}
-          description="Task completion rate"
-        />
+      <div className="grid gap-4 grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+        {[
+          { title: 'Total Employees', value: '67', icon: Users, color: 'text-blue-400', bg: 'bg-blue-500/10', border: 'border-blue-500/20', desc: 'Active workforce' },
+          { title: 'Active Projects', value: '28', icon: Briefcase, color: 'text-purple-400', bg: 'bg-purple-500/10', border: 'border-purple-500/20', desc: 'Ongoing client work' },
+          { title: 'Attendance Rate', value: '95.4%', icon: Clock, color: 'text-emerald-400', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', desc: 'Monthly average' },
+          { title: 'Leave Requests', value: '24', icon: FileText, color: 'text-amber-400', bg: 'bg-amber-500/10', border: 'border-amber-500/20', desc: 'Pending & Approved' },
+          { title: 'Performance', value: '4.85', icon: Award, color: 'text-cyan-400', bg: 'bg-cyan-500/10', border: 'border-cyan-500/20', desc: 'Out of 5.0 rating' },
+          { title: 'Productivity', value: '94%', icon: Activity, color: 'text-rose-400', bg: 'bg-rose-500/10', border: 'border-rose-500/20', desc: 'Task completion' },
+        ].map((stat, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 15, filter: 'blur(5px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            transition={{ delay: i * 0.04, duration: 0.4 }}
+            whileHover={{ y: -3 }}
+            className={`glass-card p-4 relative overflow-hidden border ${stat.border}`}
+          >
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">{stat.title}</p>
+                <p className="text-xl font-bold text-white mt-1.5">{stat.value}</p>
+              </div>
+              <div className={`p-2 rounded-xl ${stat.bg} ${stat.color} border ${stat.border}`}>
+                <stat.icon className="h-4.5 w-4.5" />
+              </div>
+            </div>
+            <p className="text-[10px] text-muted-foreground mt-2 font-semibold">{stat.desc}</p>
+          </motion.div>
+        ))}
       </div>
 
       {/* Navigation Tabs for Analytics Categories */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="flex flex-wrap h-auto py-1">
-          <TabsTrigger value="overview" className="gap-2 py-2">
+        <TabsList className="bg-white/5 border border-white/10 rounded-2xl p-1 h-auto flex-wrap gap-1 text-white">
+          <TabsTrigger value="overview" className="rounded-xl gap-2 text-xs font-bold py-2.5 px-4 data-[state=active]:bg-blue-600 data-[state=active]:text-white cursor-pointer">
             <BarChart3 className="h-4 w-4" /> Executive Overview
           </TabsTrigger>
-          <TabsTrigger value="attendance" className="gap-2 py-2">
+          <TabsTrigger value="attendance" className="rounded-xl gap-2 text-xs font-bold py-2.5 px-4 data-[state=active]:bg-blue-600 data-[state=active]:text-white cursor-pointer">
             <Clock className="h-4 w-4" /> Attendance Analytics
           </TabsTrigger>
-          <TabsTrigger value="performance" className="gap-2 py-2">
+          <TabsTrigger value="performance" className="rounded-xl gap-2 text-xs font-bold py-2.5 px-4 data-[state=active]:bg-blue-600 data-[state=active]:text-white cursor-pointer">
             <Award className="h-4 w-4" /> Employee Performance
           </TabsTrigger>
-          <TabsTrigger value="leaves" className="gap-2 py-2">
+          <TabsTrigger value="leaves" className="rounded-xl gap-2 text-xs font-bold py-2.5 px-4 data-[state=active]:bg-blue-600 data-[state=active]:text-white cursor-pointer">
             <PieChartIcon className="h-4 w-4" /> Leave Analytics
           </TabsTrigger>
-          <TabsTrigger value="projects" className="gap-2 py-2">
+          <TabsTrigger value="projects" className="rounded-xl gap-2 text-xs font-bold py-2.5 px-4 data-[state=active]:bg-blue-600 data-[state=active]:text-white cursor-pointer">
             <Briefcase className="h-4 w-4" /> Project Progress
           </TabsTrigger>
-          <TabsTrigger value="revenue" className="gap-2 py-2">
+          <TabsTrigger value="revenue" className="rounded-xl gap-2 text-xs font-bold py-2.5 px-4 data-[state=active]:bg-blue-600 data-[state=active]:text-white cursor-pointer">
             <DollarSign className="h-4 w-4" /> Revenue & Business
           </TabsTrigger>
         </TabsList>
@@ -276,145 +289,165 @@ export function ReportsAnalyticsPage({ onBack }: { onBack: () => void }) {
         <TabsContent value="overview" className="space-y-6">
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {/* Chart 1: Monthly Attendance Trend */}
-            <Card className="lg:col-span-2">
-              <CardHeader>
-                <CardTitle>Monthly Attendance & Presence Trend</CardTitle>
-                <CardDescription>Comparative analysis of present vs absent percentages across 2026</CardDescription>
-              </CardHeader>
-              <CardContent>
+            <div className="lg:col-span-2 glass-card p-5 relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+              <div className="mb-4">
+                <h3 className="text-sm font-bold text-white">Monthly Attendance & Presence Trend</h3>
+                <p className="text-xs text-muted-foreground mt-0.5 font-semibold">Comparative analysis of present vs absent percentages across 2026</p>
+              </div>
+              <div>
                 <ResponsiveContainer width="100%" height={320}>
                   <AreaChart data={monthlyAttendanceData}>
-                    <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                    <XAxis dataKey="name" tick={{ fill: 'hsl(var(--muted-foreground))' }} />
-                    <YAxis tick={{ fill: 'hsl(var(--muted-foreground))' }} />
+                    <defs>
+                      <linearGradient id="colorPresent" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.2}/>
+                        <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                      </linearGradient>
+                      <linearGradient id="colorAbsent" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#ef4444" stopOpacity={0.2}/>
+                        <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                    <XAxis dataKey="name" stroke="rgba(255,255,255,0.3)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11, fontWeight: '600' }} />
+                    <YAxis stroke="rgba(255,255,255,0.3)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11, fontWeight: '600' }} />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: 'hsl(var(--popover))',
-                        border: '1px solid hsl(var(--border))',
-                        borderRadius: 'var(--radius)',
-                        color: 'hsl(var(--popover-foreground))',
+                        backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        borderRadius: '16px',
+                        color: '#fff',
+                        fontSize: '11px',
+                        fontWeight: '600',
                       }}
                     />
-                    <Legend />
-                    <Area type="monotone" dataKey="present" name="Present %" stroke="#10b981" fillOpacity={0.2} fill="#10b981" />
-                    <Area type="monotone" dataKey="absent" name="Absent %" stroke="#ef4444" fillOpacity={0.2} fill="#ef4444" />
+                    <Legend wrapperStyle={{ fontSize: 11, fontWeight: '600', color: '#fff' }} />
+                    <Area type="monotone" dataKey="present" name="Present %" stroke="#10b981" fillOpacity={1} fill="url(#colorPresent)" strokeWidth={2} />
+                    <Area type="monotone" dataKey="absent" name="Absent %" stroke="#ef4444" fillOpacity={1} fill="url(#colorAbsent)" strokeWidth={2} />
                   </AreaChart>
                 </ResponsiveContainer>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
             {/* Chart 2: Leave Distribution Pie Chart */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Leave Type Distribution</CardTitle>
-                <CardDescription>Breakdown of requested leave categories</CardDescription>
-              </CardHeader>
-              <CardContent className="flex flex-col items-center justify-center">
-                <ResponsiveContainer width="100%" height={260}>
+            <div className="glass-card p-5 relative overflow-hidden flex flex-col justify-between">
+              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+              <div className="mb-4">
+                <h3 className="text-sm font-bold text-white">Leave Type Distribution</h3>
+                <p className="text-xs text-muted-foreground mt-0.5 font-semibold">Breakdown of requested leave categories</p>
+              </div>
+              <div className="flex flex-col items-center justify-center flex-1">
+                <ResponsiveContainer width="100%" height={240}>
                   <PieChart>
-                    <Pie data={leaveTypeData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={90} label>
+                    <Pie data={leaveTypeData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={75} innerRadius={50} paddingAngle={4} label={{ fill: '#fff', fontSize: 10, fontWeight: '600' }}>
                       {leaveTypeData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: 'hsl(var(--popover))',
-                        border: '1px solid hsl(var(--border))',
-                        borderRadius: 'var(--radius)',
+                        backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        borderRadius: '12px',
+                        fontSize: '11px',
+                        color: '#fff',
                       }}
                     />
-                    <Legend />
+                    <Legend wrapperStyle={{ fontSize: 10, fontWeight: '600' }} />
                   </PieChart>
                 </ResponsiveContainer>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
 
           {/* Tables Section */}
           <div className="grid gap-6 lg:grid-cols-2">
             {/* Table 1: Recent Reports */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Recent Generated Reports</CardTitle>
-                <CardDescription>Historical log of business intelligence documents</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="rounded-md border overflow-hidden">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Report Name</TableHead>
-                        <TableHead>Dept</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead className="text-right">Action</TableHead>
+            <div className="glass-card overflow-hidden relative">
+              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+              <div className="p-5">
+                <h3 className="text-sm font-bold text-white">Recent Generated Reports</h3>
+                <p className="text-xs text-muted-foreground mt-0.5 font-semibold">Historical log of business intelligence documents</p>
+              </div>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader className="border-b border-white/06 bg-white/02">
+                    <TableRow className="hover:bg-transparent border-b-0">
+                      <TableHead className="text-slate-400 font-bold text-xs uppercase tracking-wider py-3">Report Name</TableHead>
+                      <TableHead className="text-slate-400 font-bold text-xs uppercase tracking-wider py-3">Dept</TableHead>
+                      <TableHead className="text-slate-400 font-bold text-xs uppercase tracking-wider py-3">Status</TableHead>
+                      <TableHead className="text-slate-400 font-bold text-xs uppercase tracking-wider py-3 text-right">Action</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {recentReports.map((rep) => (
+                      <TableRow key={rep.id} className="border-b border-white/04 hover:bg-white/02 transition-colors duration-200">
+                        <TableCell className="font-bold text-white text-xs max-w-[200px] truncate" title={rep.name}>{rep.name}</TableCell>
+                        <TableCell className="text-slate-300 font-semibold text-xs">{rep.dept}</TableCell>
+                        <TableCell>
+                          <Badge className={rep.status === 'Completed' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-blue-500/10 text-blue-400 border border-blue-500/20'}>
+                            {rep.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="h-8 w-8 rounded-lg flex items-center justify-center hover:bg-white/10 text-muted-foreground hover:text-foreground cursor-pointer"
+                            onClick={() => toast.success(`Downloading ${rep.name}...`)}
+                          >
+                            <Download className="h-4 w-4 text-blue-400" />
+                          </motion.button>
+                        </TableCell>
                       </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {recentReports.map((rep) => (
-                        <TableRow key={rep.id}>
-                          <TableCell className="font-medium max-w-[200px] truncate" title={rep.name}>{rep.name}</TableCell>
-                          <TableCell className="text-muted-foreground">{rep.dept}</TableCell>
-                          <TableCell>
-                            <Badge variant={rep.status === 'Completed' ? 'default' : 'secondary'}>
-                              {rep.status}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <Button variant="ghost" size="sm" className="gap-1" onClick={() => toast.success(`Downloading ${rep.name}...`)}>
-                              <Download className="h-4 w-4" />
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </CardContent>
-            </Card>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
 
             {/* Table 2: Top Employees */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Top Performing Employees</CardTitle>
-                <CardDescription>Ranked by productivity score, attendance rate, and project success</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="rounded-md border overflow-hidden">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Employee</TableHead>
-                        <TableHead>Dept</TableHead>
-                        <TableHead className="text-center">Score</TableHead>
-                        <TableHead className="text-right">Attendance</TableHead>
+            <div className="glass-card overflow-hidden relative">
+              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+              <div className="p-5">
+                <h3 className="text-sm font-bold text-white">Top Performing Employees</h3>
+                <p className="text-xs text-muted-foreground mt-0.5 font-semibold">Ranked by productivity score, attendance rate, and project success</p>
+              </div>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader className="border-b border-white/06 bg-white/02">
+                    <TableRow className="hover:bg-transparent border-b-0">
+                      <TableHead className="text-slate-400 font-bold text-xs uppercase tracking-wider py-3">Employee</TableHead>
+                      <TableHead className="text-slate-400 font-bold text-xs uppercase tracking-wider py-3">Dept</TableHead>
+                      <TableHead className="text-slate-400 font-bold text-xs uppercase tracking-wider py-3 text-center">Score</TableHead>
+                      <TableHead className="text-slate-400 font-bold text-xs uppercase tracking-wider py-3 text-right">Attendance</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {topEmployees.map((emp, idx) => (
+                      <TableRow key={idx} className="border-b border-white/04 hover:bg-white/02 transition-colors duration-200">
+                        <TableCell className="font-bold text-white text-xs">{emp.name}</TableCell>
+                        <TableCell className="text-slate-300 font-semibold text-xs">{emp.dept}</TableCell>
+                        <TableCell className="text-center font-extrabold text-blue-400 text-xs">{emp.score}</TableCell>
+                        <TableCell className="text-right font-extrabold text-emerald-400 text-xs">{emp.attendance}</TableCell>
                       </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {topEmployees.map((emp, idx) => (
-                        <TableRow key={idx}>
-                          <TableCell className="font-medium">{emp.name}</TableCell>
-                          <TableCell className="text-muted-foreground">{emp.dept}</TableCell>
-                          <TableCell className="text-center font-bold text-primary">{emp.score}</TableCell>
-                          <TableCell className="text-right font-semibold text-emerald-500">{emp.attendance}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </CardContent>
-            </Card>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
           </div>
         </TabsContent>
 
         {/* Tab 2: Attendance Analytics */}
         <TabsContent value="attendance" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Department-Wise Attendance Statistics</CardTitle>
-              <CardDescription>Present vs Absent metrics across organizational divisions</CardDescription>
-            </CardHeader>
-            <CardContent>
+          <div className="glass-card p-5 relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            <div className="mb-4">
+              <h3 className="text-sm font-bold text-white">Department-Wise Attendance Statistics</h3>
+              <p className="text-xs text-muted-foreground mt-0.5 font-semibold">Present vs Absent metrics across organizational divisions</p>
+            </div>
+            <div>
               <ResponsiveContainer width="100%" height={350}>
                 <BarChart
                   data={[
@@ -426,61 +459,65 @@ export function ReportsAnalyticsPage({ onBack }: { onBack: () => void }) {
                     { dept: 'HR', present: 98, absent: 2 },
                   ]}
                 >
-                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                  <XAxis dataKey="dept" tick={{ fill: 'hsl(var(--muted-foreground))' }} />
-                  <YAxis tick={{ fill: 'hsl(var(--muted-foreground))' }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                  <XAxis dataKey="dept" stroke="rgba(255,255,255,0.3)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11, fontWeight: '600' }} />
+                  <YAxis stroke="rgba(255,255,255,0.3)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11, fontWeight: '600' }} />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: 'hsl(var(--popover))',
-                      border: '1px solid hsl(var(--border))',
-                      borderRadius: 'var(--radius)',
+                      backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      borderRadius: '12px',
+                      fontSize: '11px',
                     }}
                   />
-                  <Legend />
+                  <Legend wrapperStyle={{ fontSize: 11, fontWeight: '600' }} />
                   <Bar dataKey="present" name="Present %" fill="#10b981" radius={[4, 4, 0, 0]} />
                   <Bar dataKey="absent" name="Absent %" fill="#ef4444" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </TabsContent>
 
         {/* Tab 3: Employee Performance */}
         <TabsContent value="performance" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Weekly Productivity & Task Completion</CardTitle>
-              <CardDescription>Aggregate performance tracking over the last 4 weeks</CardDescription>
-            </CardHeader>
-            <CardContent>
+          <div className="glass-card p-5 relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            <div className="mb-4">
+              <h3 className="text-sm font-bold text-white">Weekly Productivity & Task Completion</h3>
+              <p className="text-xs text-muted-foreground mt-0.5 font-semibold">Aggregate performance tracking over the last 4 weeks</p>
+            </div>
+            <div>
               <ResponsiveContainer width="100%" height={320}>
                 <LineChart data={productivityData}>
-                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                  <XAxis dataKey="name" tick={{ fill: 'hsl(var(--muted-foreground))' }} />
-                  <YAxis domain={[70, 100]} tick={{ fill: 'hsl(var(--muted-foreground))' }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                  <XAxis dataKey="name" stroke="rgba(255,255,255,0.3)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11, fontWeight: '600' }} />
+                  <YAxis domain={[70, 100]} stroke="rgba(255,255,255,0.3)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11, fontWeight: '600' }} />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: 'hsl(var(--popover))',
-                      border: '1px solid hsl(var(--border))',
-                      borderRadius: 'var(--radius)',
+                      backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      borderRadius: '12px',
+                      fontSize: '11px',
                     }}
                   />
-                  <Legend />
-                  <Line type="monotone" dataKey="score" name="Productivity Score" stroke="#3b82f6" strokeWidth={3} dot={{ r: 6 }} />
+                  <Legend wrapperStyle={{ fontSize: 11, fontWeight: '600' }} />
+                  <Line type="monotone" dataKey="score" name="Productivity Score" stroke="#3b82f6" strokeWidth={3} dot={{ r: 6, fill: '#3b82f6', stroke: '#fff', strokeWidth: 2 }} />
                 </LineChart>
               </ResponsiveContainer>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </TabsContent>
 
         {/* Tab 4: Leave Analytics */}
         <TabsContent value="leaves" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Approved vs Rejected Leaves & Monthly Trends</CardTitle>
-              <CardDescription>Detailed statistical overview of leave management outcomes</CardDescription>
-            </CardHeader>
-            <CardContent>
+          <div className="glass-card p-5 relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            <div className="mb-4">
+              <h3 className="text-sm font-bold text-white">Approved vs Rejected Leaves & Monthly Trends</h3>
+              <p className="text-xs text-muted-foreground mt-0.5 font-semibold">Detailed statistical overview of leave management outcomes</p>
+            </div>
+            <div>
               <ResponsiveContainer width="100%" height={350}>
                 <BarChart
                   data={[
@@ -490,88 +527,92 @@ export function ReportsAnalyticsPage({ onBack }: { onBack: () => void }) {
                     { month: 'Aug', approved: 22, rejected: 5 },
                   ]}
                 >
-                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                  <XAxis dataKey="month" tick={{ fill: 'hsl(var(--muted-foreground))' }} />
-                  <YAxis tick={{ fill: 'hsl(var(--muted-foreground))' }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                  <XAxis dataKey="month" stroke="rgba(255,255,255,0.3)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11, fontWeight: '600' }} />
+                  <YAxis stroke="rgba(255,255,255,0.3)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11, fontWeight: '600' }} />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: 'hsl(var(--popover))',
-                      border: '1px solid hsl(var(--border))',
-                      borderRadius: 'var(--radius)',
+                      backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      borderRadius: '12px',
+                      fontSize: '11px',
                     }}
                   />
-                  <Legend />
+                  <Legend wrapperStyle={{ fontSize: 11, fontWeight: '600' }} />
                   <Bar dataKey="approved" name="Approved Leaves" fill="#10b981" radius={[4, 4, 0, 0]} />
                   <Bar dataKey="rejected" name="Rejected Leaves" fill="#ef4444" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </TabsContent>
 
         {/* Tab 5: Project Progress */}
         <TabsContent value="projects" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Active Projects & Deadline Tracking</CardTitle>
-              <CardDescription>Real-time progress bars for major enterprise initiatives</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
+          <div className="glass-card p-5 relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            <div className="mb-6">
+              <h3 className="text-sm font-bold text-white">Active Projects & Deadline Tracking</h3>
+              <p className="text-xs text-muted-foreground mt-0.5 font-semibold">Real-time progress bars for major enterprise initiatives</p>
+            </div>
+            <div className="space-y-6">
               {[
-                { name: 'E-commerce Platform Redesign', client: 'TechCorp Industries', progress: 85, deadline: '30 Aug 2026' },
-                { name: 'Mobile App Development', client: 'Digital Innovations', progress: 60, deadline: '15 Sep 2026' },
-                { name: 'CRM System Integration', client: 'Enterprise Solutions', progress: 45, deadline: '30 Sep 2026' },
-                { name: 'Cloud Infrastructure Migration', client: 'Cloud Systems', progress: 90, deadline: '25 Aug 2026' },
+                { name: 'E-commerce Platform Redesign', client: 'TechCorp Industries', progress: 85, deadline: '30 Aug 2026', color: 'from-blue-500 to-cyan-400' },
+                { name: 'Mobile App Development', client: 'Digital Innovations', progress: 60, deadline: '15 Sep 2026', color: 'from-purple-500 to-pink-500' },
+                { name: 'CRM System Integration', client: 'Enterprise Solutions', progress: 45, deadline: '30 Sep 2026', color: 'from-amber-500 to-orange-500' },
+                { name: 'Cloud Infrastructure Migration', client: 'Cloud Systems', progress: 90, deadline: '25 Aug 2026', color: 'from-emerald-500 to-teal-450' },
               ].map((proj, idx) => (
-                <div key={idx} className="space-y-2">
-                  <div className="flex justify-between text-sm font-medium">
+                <div key={idx} className="space-y-2 font-semibold">
+                  <div className="flex justify-between text-xs">
                     <div>
-                      <span>{proj.name}</span>
-                      <span className="text-xs text-muted-foreground ml-2">({proj.client})</span>
+                      <span className="text-white text-sm font-bold">{proj.name}</span>
+                      <span className="text-[11px] text-muted-foreground ml-2">({proj.client})</span>
                     </div>
-                    <span>{proj.progress}% • <span className="text-muted-foreground">Due {proj.deadline}</span></span>
+                    <span className="text-slate-300 text-xs font-bold">{proj.progress}% • <span className="text-muted-foreground font-semibold">Due {proj.deadline}</span></span>
                   </div>
-                  <div className="h-2.5 w-full bg-secondary rounded-full overflow-hidden">
+                  <div className="h-2.5 w-full bg-white/5 border border-white/06 rounded-full overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${proj.progress}%` }}
                       transition={{ duration: 1 }}
-                      className="h-full bg-primary"
+                      className={`h-full bg-gradient-to-r ${proj.color}`}
                     />
                   </div>
                 </div>
               ))}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </TabsContent>
 
         {/* Tab 6: Revenue & Business */}
         <TabsContent value="revenue" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Quarterly Revenue Growth & Business Performance</CardTitle>
-              <CardDescription>Financial trajectory and client growth analytics for 2026</CardDescription>
-            </CardHeader>
-            <CardContent>
+          <div className="glass-card p-5 relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            <div className="mb-4">
+              <h3 className="text-sm font-bold text-white">Quarterly Revenue Growth & Business Performance</h3>
+              <p className="text-xs text-muted-foreground mt-0.5 font-semibold">Financial trajectory and client growth analytics for 2026</p>
+            </div>
+            <div>
               <ResponsiveContainer width="100%" height={350}>
                 <LineChart data={revenueData}>
-                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                  <XAxis dataKey="name" tick={{ fill: 'hsl(var(--muted-foreground))' }} />
-                  <YAxis tick={{ fill: 'hsl(var(--muted-foreground))' }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                  <XAxis dataKey="name" stroke="rgba(255,255,255,0.3)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11, fontWeight: '600' }} />
+                  <YAxis stroke="rgba(255,255,255,0.3)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11, fontWeight: '600' }} />
                   <Tooltip
                     formatter={(value) => [`$${(value as number).toLocaleString()}`, 'Revenue']}
                     contentStyle={{
-                      backgroundColor: 'hsl(var(--popover))',
-                      border: '1px solid hsl(var(--border))',
-                      borderRadius: 'var(--radius)',
+                      backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      borderRadius: '12px',
+                      fontSize: '11px',
                     }}
                   />
-                  <Legend />
-                  <Line type="monotone" dataKey="revenue" name="Total Revenue ($)" stroke="#10b981" strokeWidth={3} dot={{ r: 6 }} />
+                  <Legend wrapperStyle={{ fontSize: 11, fontWeight: '600' }} />
+                  <Line type="monotone" dataKey="revenue" name="Total Revenue ($)" stroke="#10b981" strokeWidth={3} dot={{ r: 6, fill: '#10b981', stroke: '#fff', strokeWidth: 2 }} />
                 </LineChart>
               </ResponsiveContainer>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </TabsContent>
       </Tabs>
     </motion.div>

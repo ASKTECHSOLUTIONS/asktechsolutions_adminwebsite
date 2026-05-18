@@ -1,18 +1,14 @@
-import { Bell, LogOut, Menu, Settings, User, Search } from 'lucide-react';
+import { Bell, LogOut, Menu, Settings, User, Search, Zap, ChevronDown } from 'lucide-react';
 import { Button } from '../ui/button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem,
+  DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import { Avatar, AvatarFallback } from '../ui/avatar';
 import { Badge } from '../ui/badge';
 import { useDashboardStore } from '../../store/dashboardStore';
 import { useAuthStore } from '../../store/authStore';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { ThemeToggle } from './ThemeToggle';
 import { toast } from 'sonner';
 
@@ -21,200 +17,244 @@ export function Navbar() {
   const { user, logout } = useAuthStore();
 
   return (
-    <div className="sticky top-0 z-50 w-full px-4 pt-3 pb-2 bg-background/80 backdrop-blur-md">
+    <div className="sticky top-0 z-50 w-full px-3 pt-3 pb-2">
       <motion.nav
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        className="flex items-center justify-between h-16 px-4 mx-auto border border-border/80 bg-card/90 backdrop-blur-md shadow-sm rounded-[32px] max-w-[1920px]"
+        initial={{ y: -30, opacity: 0, filter: 'blur(10px)' }}
+        animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+        className="flex items-center justify-between h-14 px-4 mx-auto max-w-[1920px] rounded-2xl relative overflow-hidden"
+        style={{
+          background: 'rgba(255,255,255,0.04)',
+          backdropFilter: 'blur(30px)',
+          WebkitBackdropFilter: 'blur(30px)',
+          border: '1px solid rgba(255,255,255,0.08)',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.05) inset',
+        }}
       >
-        {/* Left Section: Mobile Menu + Circular Logo + Brand Name */}
-        <div className="flex items-center gap-3 md:gap-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="lg:hidden rounded-full hover:bg-accent"
+        {/* Top shimmer line */}
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/40 to-transparent" />
+
+        {/* ─── Left: Menu + Logo + Brand ─── */}
+        <div className="flex items-center gap-3">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="lg:hidden h-9 w-9 flex items-center justify-center rounded-xl text-muted-foreground hover:text-foreground transition-colors"
+            style={{ background: 'rgba(255,255,255,0.06)' }}
             onClick={toggleSidebar}
           >
-            <Menu className="h-5 w-5" />
-          </Button>
+            <Menu className="h-4 w-4" />
+          </motion.button>
 
-          <div className="flex items-center gap-3">
-            {/* Circular Logo exactly as requested */}
-            <div className="flex h-11 w-11 items-center justify-center rounded-full overflow-hidden border border-border/80 bg-background shadow-inner shrink-0">
+          <div className="flex items-center gap-2.5">
+            {/* Logo */}
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="h-9 w-9 rounded-xl flex items-center justify-center relative overflow-hidden shrink-0"
+              style={{
+                background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+                boxShadow: '0 0 15px rgba(59,130,246,0.4)',
+              }}
+            >
               <img
                 src="/logo.png"
-                alt="AskTechSolutions Logo"
-                className="h-full w-full object-cover hover:scale-105 transition-transform duration-300"
-                onError={(e) => {
-                  // Fallback if image fails to load
-                  (e.target as HTMLElement).style.display = 'none';
-                }}
+                alt="AST"
+                className="h-full w-full object-cover"
+                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
               />
-              <span className="font-bold text-primary text-sm absolute -z-10">AT</span>
-            </div>
+              <Zap className="h-4 w-4 text-white absolute" />
+            </motion.div>
 
-            <div className="hidden md:flex flex-col border-r border-border/60 pr-4 py-1">
-              <h1 className="text-base font-bold tracking-tight leading-none text-foreground">
-                AskTechSolutions
-              </h1>
-              <p className="text-[10px] text-muted-foreground font-medium pt-1 uppercase tracking-wider">
-                Admin Panel
-              </p>
+            {/* Brand text */}
+            <div className="hidden md:block border-r border-white/10 pr-3">
+              <p className="text-sm font-bold text-foreground leading-none">AskTechSolutions</p>
+              <p className="text-[10px] text-muted-foreground mt-0.5 uppercase tracking-widest">Admin Panel</p>
             </div>
           </div>
 
-          {/* Middle Section: Welcome Greeting & Subtitle (like Image 1) */}
-          <div className="hidden sm:flex flex-col pl-1">
-            <h2 className="text-sm md:text-base font-bold text-foreground leading-tight tracking-tight">
-              Welcome back, {user?.name ? user.name.split(' ')[0] : 'Admin'}!
-            </h2>
-            <p className="text-xs text-muted-foreground line-clamp-1">
-              It is the best time to manage your business operations
+          {/* Welcome greeting */}
+          <div className="hidden lg:flex flex-col pl-1">
+            <p className="text-sm font-semibold text-foreground leading-none">
+              Welcome back, <span className="text-blue-400">{user?.name?.split(' ')[0] || 'Admin'}</span>
             </p>
+            <p className="text-[11px] text-muted-foreground mt-0.5">Manage your business operations</p>
           </div>
         </div>
 
-        {/* Right Section: Mode Toggles + Search + Notifications + User Profile Pill */}
-        <div className="flex items-center gap-2 md:gap-3 pl-2">
-          {/* Mode Toggles */}
-          <div className="hidden lg:flex items-center gap-1.5 p-1 bg-secondary/50 border border-border/50 rounded-full">
-            <Button
-              variant={mode === 'website' ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setMode('website')}
-              className="rounded-full px-3.5 py-1.5 h-8 text-xs font-semibold transition-all shadow-none"
-            >
-              Website
-            </Button>
-            <Button
-              variant={mode === 'application' ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setMode('application')}
-              className="rounded-full px-3.5 py-1.5 h-8 text-xs font-semibold transition-all shadow-none"
-            >
-              Application
-            </Button>
-          </div>
-
-          {/* Theme Toggle */}
-          <div className="scale-90 md:scale-100">
-            <ThemeToggle />
-          </div>
-
-          {/* Search Button */}
-          <Button
-            variant="outline"
-            size="icon"
-            className="rounded-full h-9 w-9 md:h-10 md:w-10 border-border/80 bg-background hover:bg-accent/80 transition-colors shadow-sm"
-            onClick={() => toast.info('Global Search', { description: 'Search functionality will be integrated with backend API.' })}
-            title="Search"
+        {/* ─── Right: Controls ─── */}
+        <div className="flex items-center gap-2">
+          {/* Mode toggle */}
+          <div
+            className="hidden sm:flex items-center gap-1 p-1 rounded-xl"
+            style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
           >
-            <Search className="h-4 w-4 text-foreground" />
-          </Button>
+            {(['website', 'application'] as const).map((m) => (
+              <motion.button
+                key={m}
+                onClick={() => setMode(m)}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="relative px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-colors"
+                style={{ color: mode === m ? '#ffffff' : 'var(--muted-foreground)' }}
+              >
+                {mode === m && (
+                  <motion.div
+                    layoutId="mode-pill"
+                    className="absolute inset-0 rounded-lg"
+                    style={{
+                      background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+                      boxShadow: '0 0 15px rgba(59,130,246,0.4)',
+                    }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                  />
+                )}
+                <span className="relative z-10">{m}</span>
+              </motion.button>
+            ))}
+          </div>
 
-          {/* Notifications Dropdown */}
+          {/* Theme toggle */}
+          <ThemeToggle />
+
+          {/* Search */}
+          <motion.button
+            whileHover={{ scale: 1.05, boxShadow: '0 0 15px rgba(59,130,246,0.3)' }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => toast.info('Global Search', { description: 'Search will be wired to the backend API.' })}
+            className="h-9 w-9 rounded-xl flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+            style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}
+          >
+            <Search className="h-4 w-4" />
+          </motion.button>
+
+          {/* Notifications */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                className="rounded-full h-9 w-9 md:h-10 md:w-10 relative border-border/80 bg-background hover:bg-accent/80 transition-colors shadow-sm"
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="h-9 w-9 rounded-xl flex items-center justify-center text-muted-foreground hover:text-foreground relative transition-colors"
+                style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}
               >
-                <Bell className="h-4 w-4 text-foreground" />
-                <Badge className="absolute -top-1 -right-1 h-4 w-4 rounded-full p-0 flex items-center justify-center text-[10px] bg-rose-500 text-white border border-background animate-pulse font-bold">
+                <Bell className="h-4 w-4" />
+                <span className="absolute -top-0.5 -right-0.5 h-3.5 w-3.5 rounded-full bg-rose-500 text-[9px] font-bold text-white flex items-center justify-center animate-pulse">
                   3
-                </Badge>
-              </Button>
+                </span>
+              </motion.button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-80 rounded-2xl border-border/80 shadow-lg p-2">
-              <DropdownMenuLabel className="font-bold text-sm px-2 py-1.5">Notifications</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="rounded-xl p-2.5 cursor-pointer hover:bg-accent">
-                <div className="flex flex-col gap-1">
-                  <p className="text-sm font-semibold">New employee registered</p>
-                  <p className="text-xs text-muted-foreground">2 minutes ago</p>
-                </div>
-              </DropdownMenuItem>
-              <DropdownMenuItem className="rounded-xl p-2.5 cursor-pointer hover:bg-accent">
-                <div className="flex flex-col gap-1">
-                  <p className="text-sm font-semibold">Leave request pending</p>
-                  <p className="text-xs text-muted-foreground">1 hour ago</p>
-                </div>
-              </DropdownMenuItem>
-              <DropdownMenuItem className="rounded-xl p-2.5 cursor-pointer hover:bg-accent">
-                <div className="flex flex-col gap-1">
-                  <p className="text-sm font-semibold">Project milestone completed</p>
-                  <p className="text-xs text-muted-foreground">3 hours ago</p>
-                </div>
-              </DropdownMenuItem>
+            <DropdownMenuContent
+              align="end"
+              className="w-80 rounded-2xl p-2"
+              style={{
+                background: 'rgba(11,17,32,0.97)',
+                backdropFilter: 'blur(30px)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                boxShadow: '0 25px 50px rgba(0,0,0,0.5)',
+              }}
+            >
+              <DropdownMenuLabel className="font-bold text-sm px-2 py-1.5 text-foreground flex items-center justify-between">
+                Notifications
+                <span className="text-[10px] text-blue-400 font-medium">3 new</span>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator className="bg-white/06" />
+              {[
+                { title: 'New employee registered', time: '2 minutes ago', dot: 'bg-blue-500' },
+                { title: 'Leave request pending', time: '1 hour ago', dot: 'bg-amber-500' },
+                { title: 'Project milestone completed', time: '3 hours ago', dot: 'bg-emerald-500' },
+              ].map((n, i) => (
+                <DropdownMenuItem key={i} className="rounded-xl p-3 cursor-pointer gap-3 hover:bg-white/05">
+                  <div className={`h-2 w-2 rounded-full ${n.dot} shrink-0 mt-1`} />
+                  <div>
+                    <p className="text-sm font-medium text-foreground">{n.title}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{n.time}</p>
+                  </div>
+                </DropdownMenuItem>
+              ))}
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* User Profile Pill (Exactly like Image 1) */}
+          {/* User profile */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <div className="flex items-center gap-2.5 pl-1.5 pr-3 md:pr-4 py-1 rounded-full border border-border/80 bg-background hover:bg-accent/60 transition-all cursor-pointer shadow-sm group">
-                <Avatar className="h-7 w-7 md:h-8 md:w-8 rounded-full border border-primary/20 shadow-inner group-hover:scale-105 transition-transform">
-                  <AvatarFallback className="bg-primary text-primary-foreground font-bold text-xs md:text-sm">
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="flex items-center gap-2 pl-1.5 pr-2.5 py-1 rounded-xl cursor-pointer transition-all"
+                style={{
+                  background: 'rgba(255,255,255,0.06)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                }}
+              >
+                <Avatar className="h-7 w-7 rounded-lg">
+                  <AvatarFallback
+                    className="rounded-lg text-xs font-bold text-white"
+                    style={{ background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)' }}
+                  >
                     {user?.name?.charAt(0) || 'A'}
                   </AvatarFallback>
                 </Avatar>
-                <div className="hidden xl:flex flex-col text-left py-0.5">
-                  <span className="text-xs md:text-sm font-bold leading-none text-foreground tracking-tight">
-                    {user?.name || 'Admin User'}
-                  </span>
-                  <span className="text-[10px] text-muted-foreground pt-1 leading-none truncate max-w-[120px]">
-                    {user?.email || 'admin@asktech.com'}
-                  </span>
+                <div className="hidden xl:flex flex-col">
+                  <span className="text-xs font-semibold text-foreground leading-none">{user?.name || 'Admin'}</span>
+                  <span className="text-[10px] text-muted-foreground mt-0.5 truncate max-w-[100px]">{user?.email || 'admin@ast.com'}</span>
                 </div>
-              </div>
+                <ChevronDown className="h-3 w-3 text-muted-foreground hidden xl:block" />
+              </motion.div>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56 rounded-2xl border-border/80 shadow-lg p-2">
-              <DropdownMenuLabel className="p-2">
-                <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-bold leading-none text-foreground">{user?.name || 'Admin User'}</p>
-                  <p className="text-xs leading-none text-muted-foreground pt-1">
-                    {user?.email || 'admin@asktech.com'}
-                  </p>
-                </div>
+            <DropdownMenuContent
+              align="end"
+              className="w-52 rounded-2xl p-2"
+              style={{
+                background: 'rgba(11,17,32,0.97)',
+                backdropFilter: 'blur(30px)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                boxShadow: '0 25px 50px rgba(0,0,0,0.5)',
+              }}
+            >
+              <DropdownMenuLabel className="p-2 pb-3">
+                <p className="text-sm font-bold text-foreground">{user?.name || 'Admin User'}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{user?.email || 'admin@asktech.com'}</p>
               </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="rounded-xl p-2 cursor-pointer hover:bg-accent">
-                <User className="mr-2 h-4 w-4 text-primary" />
-                <span className="font-medium">Profile</span>
+              <DropdownMenuSeparator className="bg-white/06" />
+              <DropdownMenuItem className="rounded-xl p-2.5 cursor-pointer gap-2.5 hover:bg-white/05">
+                <User className="h-4 w-4 text-blue-400" /> <span className="text-sm">Profile</span>
               </DropdownMenuItem>
-              <DropdownMenuItem className="rounded-xl p-2 cursor-pointer hover:bg-accent">
-                <Settings className="mr-2 h-4 w-4 text-primary" />
-                <span className="font-medium">Settings</span>
+              <DropdownMenuItem className="rounded-xl p-2.5 cursor-pointer gap-2.5 hover:bg-white/05">
+                <Settings className="h-4 w-4 text-purple-400" /> <span className="text-sm">Settings</span>
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={logout} className="rounded-xl p-2 cursor-pointer hover:bg-rose-500/10 text-rose-500 font-medium">
-                <LogOut className="mr-2 h-4 w-4" />
-                <span>Log out</span>
+              <DropdownMenuSeparator className="bg-white/06" />
+              <DropdownMenuItem
+                onClick={logout}
+                className="rounded-xl p-2.5 cursor-pointer gap-2.5 hover:bg-rose-500/10 text-rose-400"
+              >
+                <LogOut className="h-4 w-4" /> <span className="text-sm font-medium">Log out</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
+
+        {/* Bottom glow line */}
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-500/30 to-transparent" />
       </motion.nav>
 
-      {/* Mobile Mode Toggles */}
-      <div className="lg:hidden px-2 pt-2 flex gap-2">
-        <Button
-          variant={mode === 'website' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setMode('website')}
-          className="flex-1 rounded-full text-xs font-semibold transition-all"
-        >
-          Website
-        </Button>
-        <Button
-          variant={mode === 'application' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setMode('application')}
-          className="flex-1 rounded-full text-xs font-semibold transition-all"
-        >
-          Application
-        </Button>
+      {/* Mobile mode tabs */}
+      <div className="sm:hidden flex gap-2 mt-2 px-1">
+        {(['website', 'application'] as const).map((m) => (
+          <button
+            key={m}
+            onClick={() => setMode(m)}
+            className="flex-1 py-1.5 rounded-xl text-xs font-semibold capitalize transition-all"
+            style={{
+              background: mode === m
+                ? 'linear-gradient(135deg, #3b82f6, #1d4ed8)'
+                : 'rgba(255,255,255,0.05)',
+              color: mode === m ? '#fff' : 'var(--muted-foreground)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              boxShadow: mode === m ? '0 0 15px rgba(59,130,246,0.35)' : 'none',
+            }}
+          >
+            {m}
+          </button>
+        ))}
       </div>
     </div>
   );

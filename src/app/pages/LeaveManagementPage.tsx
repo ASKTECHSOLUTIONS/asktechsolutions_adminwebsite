@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import {
   ArrowLeft,
   Search,
-  Filter,
   Download,
   CheckCircle2,
   XCircle,
@@ -14,8 +13,6 @@ import {
   Eye,
   Check,
   X,
-  Building2,
-  User,
   Briefcase,
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
@@ -37,9 +34,7 @@ import {
   TableHeader,
   TableRow,
 } from '../components/ui/table';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
-import { StatCard } from '../components/dashboard/StatCard';
 import { toast } from 'sonner';
 
 interface LeaveRequestItem {
@@ -184,115 +179,122 @@ export function LeaveManagementPage({ onBack }: { onBack: () => void }) {
     });
   };
 
-  const getStatusBadge = (status: LeaveRequestItem['status']) => {
-    switch (status) {
-      case 'Pending':
-        return <Badge className="bg-amber-500/10 text-amber-500 border-amber-500/20 border">Pending</Badge>;
-      case 'Approved':
-        return <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 border">Approved</Badge>;
-      case 'Rejected':
-        return <Badge className="bg-rose-500/10 text-rose-500 border-rose-500/20 border">Rejected</Badge>;
-    }
-  };
-
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
+      animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+      transition={{ duration: 0.6 }}
       className="space-y-6"
     >
       {/* Page Header */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={onBack}>
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={onBack}
+            className="h-9 w-9 rounded-xl flex items-center justify-center text-muted-foreground hover:text-foreground border border-white/10 bg-white/5 cursor-pointer"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </motion.button>
           <div>
-            <h1 className="text-3xl font-bold">Leave Management</h1>
-            <p className="text-muted-foreground">Manage employee leave requests and approvals</p>
+            <h1 className="text-2xl font-bold flex items-center gap-2 text-foreground">
+              <CalendarIcon className="h-7 w-7 text-blue-400" /> Leave Management
+            </h1>
+            <p className="text-sm text-muted-foreground mt-0.5">Manage employee leave requests and approvals</p>
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          <Button variant="outline" className="gap-2" onClick={() => toast.success('Filter criteria applied.')}>
-            <Filter className="h-4 w-4" />
+        <div className="flex items-center gap-2.5">
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => toast.success('Filter criteria applied.')}
+            className="gap-2 rounded-xl h-11 px-4 text-white border border-white/10 bg-white/5 hover:bg-white/10 transition-colors font-semibold flex items-center justify-center cursor-pointer"
+          >
+            <Search className="h-4 w-4 text-muted-foreground" />
             <span>Apply Filter</span>
-          </Button>
-          <Button className="gap-2" onClick={() => toast.success('Leave report exported successfully.')}>
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.02, boxShadow: '0 0 25px rgba(59,130,246,0.4)' }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => toast.success('Leave report exported successfully.')}
+            className="gap-2 rounded-xl h-11 px-5 text-white font-semibold flex items-center justify-center cursor-pointer"
+            style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)' }}
+          >
             <Download className="h-4 w-4" />
             <span>Export Report</span>
-          </Button>
+          </motion.button>
         </div>
       </div>
 
       {/* Summary Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <StatCard
-          title="Total Leave Requests"
-          value={requests.length.toString()}
-          icon={FileText}
-          description="All time requests"
-        />
-        <StatCard
-          title="Pending Approvals"
-          value={requests.filter(r => r.status === 'Pending').length.toString()}
-          icon={Clock}
-          description="Require attention"
-        />
-        <StatCard
-          title="Approved Leaves"
-          value={requests.filter(r => r.status === 'Approved').length.toString()}
-          icon={CheckCircle2}
-          trend={{ value: 12, isPositive: true }}
-          description="Successfully granted"
-        />
-        <StatCard
-          title="Employees On Leave Today"
-          value="8"
-          icon={UserCheck}
-          description="Currently out of office"
-        />
+      <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
+        {[
+          { title: 'Total Requests', value: requests.length.toString(), icon: FileText, color: 'text-blue-400', bg: 'bg-blue-500/10', border: 'border-blue-500/20', desc: 'All time requests' },
+          { title: 'Pending Approvals', value: requests.filter(r => r.status === 'Pending').length.toString(), icon: Clock, color: 'text-amber-400', bg: 'bg-amber-500/10', border: 'border-amber-500/20', desc: 'Requires attention' },
+          { title: 'Approved Leaves', value: requests.filter(r => r.status === 'Approved').length.toString(), icon: CheckCircle2, color: 'text-emerald-400', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', desc: 'Granted leaves' },
+          { title: 'Out of Office Today', value: '8', icon: UserCheck, color: 'text-rose-400', bg: 'bg-rose-500/10', border: 'border-rose-500/20', desc: 'Currently active' },
+        ].map((stat, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 15, filter: 'blur(5px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            transition={{ delay: i * 0.04, duration: 0.4 }}
+            whileHover={{ y: -3 }}
+            className={`glass-card p-4.5 relative overflow-hidden border ${stat.border}`}
+          >
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">{stat.title}</p>
+                <p className="text-xl font-bold text-white mt-1.5">{stat.value}</p>
+              </div>
+              <div className={`p-2.5 rounded-xl ${stat.bg} ${stat.color} border ${stat.border}`}>
+                <stat.icon className="h-4.5 w-4.5" />
+              </div>
+            </div>
+            <p className="text-[10px] text-muted-foreground mt-2 font-semibold">{stat.desc}</p>
+          </motion.div>
+        ))}
       </div>
 
       {/* Navigation Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList>
-          <TabsTrigger value="requests" className="gap-2">
-            <FileText className="h-4 w-4" />
-            Leave Requests
+        <TabsList className="bg-white/5 border border-white/10 rounded-2xl p-1 h-auto flex-wrap gap-1 text-white">
+          <TabsTrigger value="requests" className="rounded-xl gap-2 text-xs font-bold py-2.5 px-4 data-[state=active]:bg-blue-600 data-[state=active]:text-white cursor-pointer">
+            <FileText className="h-4 w-4" /> Leave Requests
           </TabsTrigger>
-          <TabsTrigger value="balances" className="gap-2">
-            <Briefcase className="h-4 w-4" />
-            Leave Balance Overview
+          <TabsTrigger value="balances" className="rounded-xl gap-2 text-xs font-bold py-2.5 px-4 data-[state=active]:bg-blue-600 data-[state=active]:text-white cursor-pointer">
+            <Briefcase className="h-4 w-4" /> Leave Balance Overview
           </TabsTrigger>
-          <TabsTrigger value="calendar" className="gap-2">
-            <CalendarIcon className="h-4 w-4" />
-            Leave Calendar
+          <TabsTrigger value="calendar" className="rounded-xl gap-2 text-xs font-bold py-2.5 px-4 data-[state=active]:bg-blue-600 data-[state=active]:text-white cursor-pointer">
+            <CalendarIcon className="h-4 w-4" /> Leave Calendar
           </TabsTrigger>
-          <TabsTrigger value="history" className="gap-2">
-            <Clock className="h-4 w-4" />
-            Employee Leave History
+          <TabsTrigger value="history" className="rounded-xl gap-2 text-xs font-bold py-2.5 px-4 data-[state=active]:bg-blue-600 data-[state=active]:text-white cursor-pointer">
+            <Clock className="h-4 w-4" /> Employee Leave History
           </TabsTrigger>
         </TabsList>
 
-        {/* Tab 1: Leave Requests Table & Filters */}
+        {/* Tab 1: Leave Requests */}
         <TabsContent value="requests" className="space-y-6">
           {/* Top Filter Section */}
-          <Card className="bg-card">
-            <CardContent className="p-4 grid gap-4 md:grid-cols-2 lg:grid-cols-5 items-center">
-              <div className="relative">
+          <div className="glass-card p-4 relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5 items-center">
+              <div className="relative rounded-xl" style={{ border: '1px solid rgba(255,255,255,0.08)' }}>
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search employees..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-9 bg-input-background"
+                  className="pl-9 rounded-xl bg-white/5 border-0 text-white placeholder:text-slate-500 focus-visible:ring-0 focus-visible:ring-offset-0 h-10"
                 />
               </div>
               <Select value={typeFilter} onValueChange={setTypeFilter}>
-                <SelectTrigger>
+                <SelectTrigger className="rounded-xl bg-white/5 border-white/10 text-white h-10 focus:ring-0 focus:ring-offset-0">
                   <SelectValue placeholder="Leave Type" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-slate-900 border-white/10 text-white rounded-xl">
                   <SelectItem value="all">All Leave Types</SelectItem>
                   <SelectItem value="Sick Leave">Sick Leave</SelectItem>
                   <SelectItem value="Casual Leave">Casual Leave</SelectItem>
@@ -301,10 +303,10 @@ export function LeaveManagementPage({ onBack }: { onBack: () => void }) {
                 </SelectContent>
               </Select>
               <Select value={deptFilter} onValueChange={setDeptFilter}>
-                <SelectTrigger>
+                <SelectTrigger className="rounded-xl bg-white/5 border-white/10 text-white h-10 focus:ring-0 focus:ring-offset-0">
                   <SelectValue placeholder="Department" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-slate-900 border-white/10 text-white rounded-xl">
                   <SelectItem value="all">All Departments</SelectItem>
                   <SelectItem value="Engineering">Engineering</SelectItem>
                   <SelectItem value="Design">Design</SelectItem>
@@ -314,231 +316,252 @@ export function LeaveManagementPage({ onBack }: { onBack: () => void }) {
                 </SelectContent>
               </Select>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger>
+                <SelectTrigger className="rounded-xl bg-white/5 border-white/10 text-white h-10 focus:ring-0 focus:ring-offset-0">
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-slate-900 border-white/10 text-white rounded-xl">
                   <SelectItem value="all">All Status</SelectItem>
                   <SelectItem value="Pending">Pending</SelectItem>
                   <SelectItem value="Approved">Approved</SelectItem>
                   <SelectItem value="Rejected">Rejected</SelectItem>
                 </SelectContent>
               </Select>
-              <div className="flex items-center gap-2">
-                <Button variant="outline" className="w-full gap-2" onClick={() => { setSearchTerm(''); setTypeFilter('all'); setDeptFilter('all'); setStatusFilter('all'); toast.info('Filters reset.'); }}>
-                  <X className="h-4 w-4" /> Reset
-                </Button>
+              <div>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full gap-2 rounded-xl bg-white/5 border border-white/10 text-white h-10 text-xs font-semibold flex items-center justify-center cursor-pointer hover:bg-white/10"
+                  onClick={() => { setSearchTerm(''); setTypeFilter('all'); setDeptFilter('all'); setStatusFilter('all'); toast.info('Filters reset.'); }}
+                >
+                  <X className="h-4 w-4 text-rose-450" /> Reset Filters
+                </motion.button>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
           {/* Main Table */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Employee Leave Requests</CardTitle>
-              <CardDescription>Comprehensive list of submitted leave applications</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="rounded-md border overflow-hidden">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Employee</TableHead>
-                      <TableHead>Department</TableHead>
-                      <TableHead>Leave Type</TableHead>
-                      <TableHead>Start Date</TableHead>
-                      <TableHead>End Date</TableHead>
-                      <TableHead className="text-center">Total Days</TableHead>
-                      <TableHead>Reason</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
+          <div className="glass-card overflow-hidden relative">
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            <div className="p-5">
+              <h3 className="text-sm font-bold text-white">Employee Leave Requests</h3>
+              <p className="text-xs text-muted-foreground mt-0.5 font-semibold">Comprehensive list of submitted leave applications</p>
+            </div>
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader className="border-b border-white/06 bg-white/02">
+                  <TableRow className="hover:bg-transparent border-b-0">
+                    <TableHead className="text-slate-400 font-bold text-xs uppercase tracking-wider py-3">Employee</TableHead>
+                    <TableHead className="text-slate-400 font-bold text-xs uppercase tracking-wider py-3">Department</TableHead>
+                    <TableHead className="text-slate-400 font-bold text-xs uppercase tracking-wider py-3">Leave Type</TableHead>
+                    <TableHead className="text-slate-400 font-bold text-xs uppercase tracking-wider py-3">Start Date</TableHead>
+                    <TableHead className="text-slate-400 font-bold text-xs uppercase tracking-wider py-3">End Date</TableHead>
+                    <TableHead className="text-slate-400 font-bold text-xs uppercase tracking-wider py-3 text-center">Total Days</TableHead>
+                    <TableHead className="text-slate-400 font-bold text-xs uppercase tracking-wider py-3">Reason</TableHead>
+                    <TableHead className="text-slate-400 font-bold text-xs uppercase tracking-wider py-3">Status</TableHead>
+                    <TableHead className="text-slate-400 font-bold text-xs uppercase tracking-wider py-3 text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <AnimatePresence mode="popLayout">
                     {filteredRequests.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
+                        <TableCell colSpan={9} className="text-center py-12 text-muted-foreground font-semibold">
                           No leave requests matching your search or filter criteria.
                         </TableCell>
                       </TableRow>
                     ) : (
-                      filteredRequests.map((req) => (
-                        <TableRow key={req.id} className="group hover:bg-accent/50 transition-colors">
+                      filteredRequests.map((req, i) => (
+                        <TableRow key={req.id} className="group border-b border-white/04 hover:bg-white/02 transition-colors duration-200">
                           <TableCell>
                             <div className="flex items-center gap-3">
-                              <Avatar className="h-9 w-9">
-                                <AvatarFallback className="bg-primary/10 text-primary font-semibold">
+                              <Avatar className="h-9 w-9 border border-white/10">
+                                <AvatarFallback className="bg-blue-500/10 text-blue-400 font-bold">
                                   {req.name.split(' ').map(n => n[0]).join('')}
                                 </AvatarFallback>
                               </Avatar>
                               <div>
-                                <p className="font-medium group-hover:text-primary transition-colors">{req.name}</p>
-                                <p className="text-xs text-muted-foreground">{req.email}</p>
+                                <p className="font-bold text-white text-xs group-hover:text-blue-400 transition-colors">{req.name}</p>
+                                <p className="text-[10px] text-muted-foreground mt-0.5 font-semibold">{req.email}</p>
                               </div>
                             </div>
                           </TableCell>
-                          <TableCell className="text-muted-foreground font-medium">{req.department}</TableCell>
+                          <TableCell className="text-slate-300 font-semibold text-xs">{req.department}</TableCell>
                           <TableCell>
-                            <Badge variant="outline" className="font-normal">
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold border border-white/10 bg-white/5 text-slate-300 uppercase tracking-wider">
                               {req.leaveType}
-                            </Badge>
+                            </span>
                           </TableCell>
-                          <TableCell className="font-medium">{req.startDate}</TableCell>
-                          <TableCell className="font-medium">{req.endDate}</TableCell>
-                          <TableCell className="text-center font-semibold">{req.totalDays}</TableCell>
-                          <TableCell className="max-w-[180px] truncate text-muted-foreground" title={req.reason}>
+                          <TableCell className="font-semibold text-white text-xs">{req.startDate}</TableCell>
+                          <TableCell className="font-semibold text-white text-xs">{req.endDate}</TableCell>
+                          <TableCell className="text-center font-bold text-xs text-white">{req.totalDays}</TableCell>
+                          <TableCell className="max-w-[185px] truncate text-slate-400 font-semibold text-xs" title={req.reason}>
                             {req.reason}
                           </TableCell>
-                          <TableCell>{getStatusBadge(req.status)}</TableCell>
+                          <TableCell>
+                            <Badge className={
+                              req.status === 'Approved' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
+                              req.status === 'Pending' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
+                              'bg-rose-500/10 text-rose-400 border border-rose-500/20'
+                            }>
+                              {req.status}
+                            </Badge>
+                          </TableCell>
                           <TableCell className="text-right">
                             <div className="flex items-center justify-end gap-1">
                               {req.status === 'Pending' && (
                                 <>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-8 w-8 text-emerald-500 hover:bg-emerald-500/10 hover:text-emerald-500"
+                                  <motion.button
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.9 }}
+                                    className="h-8 w-8 rounded-lg flex items-center justify-center hover:bg-emerald-500/10 text-muted-foreground hover:text-emerald-400 cursor-pointer"
                                     onClick={() => handleApprove(req.id, req.name)}
                                     title="Approve"
                                   >
-                                    <Check className="h-4 w-4" />
-                                  </Button>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-8 w-8 text-rose-500 hover:bg-rose-500/10 hover:text-rose-500"
+                                    <Check className="h-4.5 w-4.5" />
+                                  </motion.button>
+                                  <motion.button
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.9 }}
+                                    className="h-8 w-8 rounded-lg flex items-center justify-center hover:bg-rose-500/10 text-muted-foreground hover:text-rose-400 cursor-pointer"
                                     onClick={() => handleReject(req.id, req.name)}
                                     title="Reject"
                                   >
-                                    <X className="h-4 w-4" />
-                                  </Button>
+                                    <X className="h-4.5 w-4.5" />
+                                  </motion.button>
                                 </>
                               )}
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8 text-muted-foreground hover:text-primary hover:bg-accent"
+                              <motion.button
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                                className="h-8 w-8 rounded-lg flex items-center justify-center hover:bg-white/10 text-muted-foreground hover:text-foreground cursor-pointer"
                                 onClick={() => handleViewDetails(req)}
                                 title="View Details"
                               >
-                                <Eye className="h-4 w-4" />
-                              </Button>
+                                <Eye className="h-4.5 w-4.5 text-blue-400" />
+                              </motion.button>
                             </div>
                           </TableCell>
                         </TableRow>
                       ))
                     )}
-                  </TableBody>
-                </Table>
-              </div>
+                  </AnimatePresence>
+                </TableBody>
+              </Table>
+            </div>
 
-              {/* Pagination */}
-              <div className="flex items-center justify-between pt-4 text-sm text-muted-foreground">
-                <p>Showing {filteredRequests.length} of {requests.length} leave requests</p>
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" disabled>Previous</Button>
-                  <Button variant="outline" size="sm" className="bg-primary text-primary-foreground">1</Button>
-                  <Button variant="outline" size="sm" disabled>Next</Button>
-                </div>
+            {/* Pagination */}
+            <div className="flex items-center justify-between p-5 text-xs text-muted-foreground font-semibold border-t border-white/06">
+              <p>Showing {filteredRequests.length} of {requests.length} leave requests</p>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm" className="rounded-lg bg-white/5 border-white/10 hover:bg-white/10" disabled>Previous</Button>
+                <Button variant="outline" size="sm" className="rounded-lg bg-blue-600 border-0 text-white font-bold">1</Button>
+                <Button variant="outline" size="sm" className="rounded-lg bg-white/5 border-white/10 hover:bg-white/10" disabled>Next</Button>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </TabsContent>
 
         {/* Tab 2: Leave Balance Overview */}
         <TabsContent value="balances" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Employee Leave Balances</CardTitle>
-              <CardDescription>Remaining allocated leave quotas per employee</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="rounded-md border overflow-hidden">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Employee</TableHead>
-                      <TableHead>Department</TableHead>
-                      <TableHead className="text-center">Sick Leave (Remaining)</TableHead>
-                      <TableHead className="text-center">Casual Leave (Remaining)</TableHead>
-                      <TableHead className="text-center">Paid Leave (Remaining)</TableHead>
-                      <TableHead className="text-center">Emergency Leave (Remaining)</TableHead>
+          <div className="glass-card overflow-hidden relative">
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            <div className="p-5">
+              <h3 className="text-sm font-bold text-white">Employee Leave Balances</h3>
+              <p className="text-xs text-muted-foreground mt-0.5 font-semibold">Remaining allocated leave quotas per employee</p>
+            </div>
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader className="border-b border-white/06 bg-white/02">
+                  <TableRow className="hover:bg-transparent border-b-0">
+                    <TableHead className="text-slate-400 font-bold text-xs uppercase tracking-wider py-3">Employee</TableHead>
+                    <TableHead className="text-slate-400 font-bold text-xs uppercase tracking-wider py-3">Department</TableHead>
+                    <TableHead className="text-slate-400 font-bold text-xs uppercase tracking-wider py-3 text-center">Sick Leave (Remaining)</TableHead>
+                    <TableHead className="text-slate-400 font-bold text-xs uppercase tracking-wider py-3 text-center">Casual Leave (Remaining)</TableHead>
+                    <TableHead className="text-slate-400 font-bold text-xs uppercase tracking-wider py-3 text-center">Paid Leave (Remaining)</TableHead>
+                    <TableHead className="text-slate-400 font-bold text-xs uppercase tracking-wider py-3 text-center">Emergency Leave (Remaining)</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {leaveBalances.map((bal, index) => (
+                    <TableRow key={index} className="border-b border-white/04 hover:bg-white/02 transition-colors duration-200">
+                      <TableCell className="font-bold text-white text-xs">{bal.name}</TableCell>
+                      <TableCell className="text-slate-300 font-semibold text-xs">{bal.dept}</TableCell>
+                      <TableCell className="text-center font-extrabold text-blue-400 text-xs">{bal.sick} days</TableCell>
+                      <TableCell className="text-center font-extrabold text-amber-400 text-xs">{bal.casual} days</TableCell>
+                      <TableCell className="text-center font-extrabold text-emerald-400 text-xs">{bal.paid} days</TableCell>
+                      <TableCell className="text-center font-extrabold text-rose-400 text-xs">{bal.emergency} days</TableCell>
                     </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {leaveBalances.map((bal, index) => (
-                      <TableRow key={index}>
-                        <TableCell className="font-medium">{bal.name}</TableCell>
-                        <TableCell className="text-muted-foreground">{bal.dept}</TableCell>
-                        <TableCell className="text-center font-semibold text-primary">{bal.sick} days</TableCell>
-                        <TableCell className="text-center font-semibold text-amber-500">{bal.casual} days</TableCell>
-                        <TableCell className="text-center font-semibold text-emerald-500">{bal.paid} days</TableCell>
-                        <TableCell className="text-center font-semibold text-rose-500">{bal.emergency} days</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </CardContent>
-          </Card>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
         </TabsContent>
 
-        {/* Tab 3: Leave Calendar View */}
+        {/* Tab 3: Leave Calendar */}
         <TabsContent value="calendar" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Leave Calendar Schedule</CardTitle>
-              <CardDescription>Visual representation of upcoming and ongoing employee leaves</CardDescription>
-            </CardHeader>
-            <CardContent className="py-8 text-center space-y-4">
-              <CalendarIcon className="h-16 w-16 mx-auto text-muted-foreground opacity-50 animate-pulse" />
-              <h3 className="text-lg font-semibold">Enterprise Calendar Sync Active</h3>
-              <p className="text-muted-foreground max-w-md mx-auto text-sm">
-                The interactive multi-month enterprise leave schedule is currently synchronized with Google Workspace & Microsoft Outlook calendars.
-              </p>
-              <div className="flex justify-center gap-3 pt-2">
-                <Button variant="outline" className="gap-2">
-                  <CalendarIcon className="h-4 w-4" /> Month View
-                </Button>
-                <Button className="gap-2">
-                  <Download className="h-4 w-4" /> Export ICS Feed
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="glass-card p-6 relative overflow-hidden text-center space-y-4">
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            <CalendarIcon className="h-14 w-14 mx-auto text-blue-400 opacity-80 animate-pulse" />
+            <h3 className="text-lg font-bold text-white">Enterprise Calendar Sync Active</h3>
+            <p className="text-slate-400 max-w-md mx-auto text-xs font-semibold leading-relaxed">
+              The interactive multi-month enterprise leave schedule is currently synchronized with Google Workspace & Microsoft Outlook calendars.
+            </p>
+            <div className="flex justify-center gap-3 pt-2">
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="gap-2 rounded-xl h-10 px-4 text-white border border-white/10 bg-white/5 hover:bg-white/10 transition-colors font-semibold flex items-center justify-center cursor-pointer text-xs"
+                onClick={() => toast.info('Calendar monthly perspective toggled.')}
+              >
+                <CalendarIcon className="h-4 w-4 text-blue-400" /> Month View
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="gap-2 rounded-xl h-10 px-4 text-white border border-white/10 bg-white/5 hover:bg-white/10 transition-colors font-semibold flex items-center justify-center cursor-pointer text-xs"
+                onClick={() => toast.success('Calendar ICS Feed file generated successfully.')}
+              >
+                <Download className="h-4 w-4 text-emerald-400" /> Export ICS Feed
+              </motion.button>
+            </div>
+          </div>
         </TabsContent>
 
         {/* Tab 4: Employee Leave History */}
         <TabsContent value="history" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Leave Activities & Historical Archives</CardTitle>
-              <CardDescription>Log of past approved leaves and system actions</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {[
-                  { name: 'Michael Chen', action: 'Approved 3 days Sick Leave', time: 'Yesterday, 4:30 PM', approver: 'Admin (System)' },
-                  { name: 'Emily Rodriguez', action: 'Approved 1 day Emergency Leave', time: '16 Aug 2026', approver: 'HR Manager' },
-                  { name: 'John Anderson', action: 'Rejected 3 days Casual Leave', time: '12 Aug 2026', approver: 'Engineering Lead' },
-                  { name: 'Sarah Mitchell', action: 'Approved 2 days Casual Leave', time: '10 Aug 2026', approver: 'Design Director' },
-                ].map((item, idx) => (
-                  <div key={idx} className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent/50 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <div className="h-10 w-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold">
+          <div className="glass-card p-5 relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            <div className="mb-4">
+              <h3 className="text-sm font-bold text-white">Recent Leave Activities & Historical Archives</h3>
+              <p className="text-xs text-muted-foreground mt-0.5 font-semibold">Log of past approved leaves and system actions</p>
+            </div>
+            <div className="space-y-3">
+              {[
+                { name: 'Michael Chen', action: 'Approved 3 days Sick Leave', time: 'Yesterday, 4:30 PM', approver: 'Admin (System)' },
+                { name: 'Emily Rodriguez', action: 'Approved 1 day Emergency Leave', time: '16 Aug 2026', approver: 'HR Manager' },
+                { name: 'John Anderson', action: 'Rejected 3 days Casual Leave', time: '12 Aug 2026', approver: 'Engineering Lead' },
+                { name: 'Sarah Mitchell', action: 'Approved 2 days Casual Leave', time: '10 Aug 2026', approver: 'Design Director' },
+              ].map((item, idx) => (
+                <div key={idx} className="flex items-center justify-between p-4 bg-white/5 border border-white/04 rounded-2xl hover:bg-white/10 transition-all duration-200">
+                  <div className="flex items-center gap-4">
+                    <Avatar className="h-9 w-9 border border-white/10">
+                      <AvatarFallback className="bg-blue-500/10 text-blue-400 font-bold">
                         {item.name.split(' ').map(n => n[0]).join('')}
-                      </div>
-                      <div>
-                        <p className="font-medium text-sm">{item.name}</p>
-                        <p className="text-xs text-muted-foreground">{item.action} • <span className="font-medium text-foreground">{item.approver}</span></p>
-                      </div>
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="font-bold text-white text-xs">{item.name}</p>
+                      <p className="text-[11px] text-muted-foreground mt-1 font-semibold">
+                        {item.action} • Approved by <span className="text-slate-300 font-bold">{item.approver}</span>
+                      </p>
                     </div>
-                    <span className="text-xs text-muted-foreground">{item.time}</span>
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                  <span className="text-[10px] text-muted-foreground font-semibold">{item.time}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </TabsContent>
       </Tabs>
     </motion.div>
