@@ -58,7 +58,9 @@ export function Sidebar({ onNavigate }: SidebarProps) {
   const navItems = mode === 'website' ? websiteNavItems : applicationNavItems;
 
   const handleNavigation = (href: string) => {
-    setSidebarCollapsed(true);
+    if (window.innerWidth < 1024) {
+      setSidebarCollapsed(true);
+    }
     if (onNavigate) {
       onNavigate(href);
     }
@@ -86,7 +88,7 @@ export function Sidebar({ onNavigate }: SidebarProps) {
         transition={{ type: 'spring', damping: 30, stiffness: 300 }}
         className={cn(
           'fixed left-0 top-16 z-40 h-[calc(100vh-4rem)] w-64 border-r border-border bg-card',
-          'lg:sticky lg:top-16 lg:translate-x-0'
+          'lg:sticky lg:top-16 lg:!transform-none'
         )}
       >
         <div className="flex h-full flex-col">

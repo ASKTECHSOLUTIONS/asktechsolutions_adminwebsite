@@ -22,6 +22,9 @@ import { Avatar, AvatarFallback } from '../components/ui/avatar';
 import { ScrollArea } from '../components/ui/scroll-area';
 import { EmployeeManagementPage } from './EmployeeManagementPage';
 import { ClientManagementPage } from './ClientManagementPage';
+import { AttendancePage } from './AttendancePage';
+import { LeaveManagementPage } from './LeaveManagementPage';
+import { ReportsAnalyticsPage } from './ReportsAnalyticsPage';
 
 const websiteData = [
   { name: 'Jan', value: 45 },
@@ -41,7 +44,7 @@ const applicationData = [
   { name: 'Jun', value: 203 },
 ];
 
-type PageView = 'dashboard' | 'employees' | 'clients';
+type PageView = 'dashboard' | 'employees' | 'clients' | 'attendance' | 'leaves' | 'reports';
 
 export function DashboardPage() {
   const { mode } = useDashboardStore();
@@ -52,6 +55,12 @@ export function DashboardPage() {
       setCurrentPage('employees');
     } else if (path === '/clients') {
       setCurrentPage('clients');
+    } else if (path === '/attendance') {
+      setCurrentPage('attendance');
+    } else if (path === '/leaves') {
+      setCurrentPage('leaves');
+    } else if (path === '/reports') {
+      setCurrentPage('reports');
     } else {
       setCurrentPage('dashboard');
     }
@@ -79,6 +88,48 @@ export function DashboardPage() {
           <Sidebar onNavigate={handleNavigation} />
           <main className="flex-1 p-4 md:p-6 lg:p-8">
             <ClientManagementPage onBack={() => setCurrentPage('dashboard')} />
+          </main>
+        </div>
+      </div>
+    );
+  }
+
+  if (currentPage === 'attendance') {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="flex">
+          <Sidebar onNavigate={handleNavigation} />
+          <main className="flex-1 p-4 md:p-6 lg:p-8">
+            <AttendancePage onBack={() => setCurrentPage('dashboard')} />
+          </main>
+        </div>
+      </div>
+    );
+  }
+
+  if (currentPage === 'leaves') {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="flex">
+          <Sidebar onNavigate={handleNavigation} />
+          <main className="flex-1 p-4 md:p-6 lg:p-8">
+            <LeaveManagementPage onBack={() => setCurrentPage('dashboard')} />
+          </main>
+        </div>
+      </div>
+    );
+  }
+
+  if (currentPage === 'reports') {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="flex">
+          <Sidebar onNavigate={handleNavigation} />
+          <main className="flex-1 p-4 md:p-6 lg:p-8">
+            <ReportsAnalyticsPage onBack={() => setCurrentPage('dashboard')} />
           </main>
         </div>
       </div>
