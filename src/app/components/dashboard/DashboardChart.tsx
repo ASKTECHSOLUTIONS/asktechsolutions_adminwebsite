@@ -15,14 +15,13 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     <div
       className="px-3 py-2 rounded-xl text-sm"
       style={{
-        background: 'rgba(11,17,32,0.95)',
-        border: '1px solid rgba(59,130,246,0.25)',
-        backdropFilter: 'blur(20px)',
+        background: 'var(--popover)',
+        border: '1px solid var(--border)',
         boxShadow: '0 0 20px rgba(59,130,246,0.15)',
       }}
     >
-      <p className="text-slate-400 text-xs font-medium mb-1">{label}</p>
-      <p className="text-white font-bold">{payload[0].value.toLocaleString()}</p>
+      <p className="text-muted-foreground text-xs font-medium mb-1">{label}</p>
+      <p className="text-foreground font-bold">{payload[0].value.toLocaleString()}</p>
     </div>
   );
 };
@@ -30,9 +29,9 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 export function DashboardChart({ title, description, data, dataKey, color = '#3b82f6' }: DashboardChartProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
-      animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-      transition={{ duration: 0.7, ease: 'easeOut' }}
+      initial={{ opacity: 0, y: 20, }}
+      animate={{ opacity: 1, y: 0, }}
+      transition={{ duration: 0.25, ease: 'easeOut' }}
       className="glass-card p-6 relative overflow-hidden"
     >
       {/* Top light reflection */}
@@ -62,17 +61,17 @@ export function DashboardChart({ title, description, data, dataKey, color = '#3b
 
           <CartesianGrid
             strokeDasharray="3 3"
-            stroke="rgba(255,255,255,0.05)"
+            stroke="var(--border)"
             vertical={false}
           />
           <XAxis
             dataKey="name"
-            tick={{ fill: '#64748b', fontSize: 11, fontWeight: 500 }}
+            tick={{ fill: 'var(--muted-foreground)', fontSize: 11, fontWeight: 500 }}
             axisLine={false}
             tickLine={false}
           />
           <YAxis
-            tick={{ fill: '#64748b', fontSize: 11 }}
+            tick={{ fill: 'var(--muted-foreground)', fontSize: 11 }}
             axisLine={false}
             tickLine={false}
           />

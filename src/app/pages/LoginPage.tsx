@@ -64,16 +64,16 @@ export function LoginPage() {
 
       {/* Main card */}
       <motion.div
-        initial={{ opacity: 0, y: 40, filter: 'blur(20px)' }}
-        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-        transition={{ duration: 0.8, ease: 'easeOut' }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, ease: 'easeOut' }}
         className="relative z-10 w-full max-w-md px-4"
       >
         {/* Logo & Brand */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.2, duration: 0.6, type: 'spring', stiffness: 200 }}
+          transition={{ delay: 0.2, duration: 0.25, type: 'spring', stiffness: 200 }}
           className="text-center mb-8"
         >
           <div className="relative inline-block mb-4">
@@ -104,7 +104,7 @@ export function LoginPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.35, duration: 0.6 }}
+          transition={{ delay: 0.35, duration: 0.25 }}
           className="relative rounded-3xl overflow-hidden"
           style={{
             background: 'rgba(255,255,255,0.04)',
@@ -215,7 +215,7 @@ export function LoginPage() {
                     <motion.div
                       className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full"
                       animate={{ rotate: 360 }}
-                      transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
+                      transition={{ duration: 0.25, repeat: Infinity, ease: 'linear' }}
                     />
                   ) : (
                     <>

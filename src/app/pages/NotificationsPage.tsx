@@ -74,9 +74,9 @@ export function NotificationsPage({ onBack }: NotificationsPageProps) {
     <div className="space-y-6">
       {/* Header */}
       <motion.div
-        initial={{ opacity: 0, y: -20, filter: 'blur(10px)' }}
-        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-        transition={{ duration: 0.6 }}
+        initial={{ opacity: 0, y: -20, }}
+        animate={{ opacity: 1, y: 0, }}
+        transition={{ duration: 0.25 }}
         className="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
       >
         <div className="flex items-center gap-3">
@@ -134,8 +134,8 @@ export function NotificationsPage({ onBack }: NotificationsPageProps) {
         ].map((stat, i) => (
           <motion.div
             key={i}
-            initial={{ opacity: 0, y: 15, filter: 'blur(5px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            initial={{ opacity: 0, y: 15, }}
+            animate={{ opacity: 1, y: 0, }}
             transition={{ delay: i * 0.04, duration: 0.4 }}
             whileHover={{ y: -3 }}
             className={`glass-card p-4 text-center border ${stat.border} ${stat.bg} relative overflow-hidden`}
@@ -192,9 +192,9 @@ export function NotificationsPage({ onBack }: NotificationsPageProps) {
 
       {/* Notifications List */}
       <motion.div
-        initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
-        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-        transition={{ delay: 0.2, duration: 0.6 }}
+        initial={{ opacity: 0, y: 20, }}
+        animate={{ opacity: 1, y: 0, }}
+        transition={{ delay: 0.2, duration: 0.25 }}
         className="glass-card overflow-hidden relative p-1.5"
       >
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />

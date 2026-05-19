@@ -124,12 +124,7 @@ export function ReportsAnalyticsPage({ onBack }: { onBack: () => void }) {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
-      animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-      transition={{ duration: 0.6 }}
-      className="space-y-6"
-    >
+    <div className="space-y-6">
       {/* Page Header */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-4">
@@ -241,8 +236,8 @@ export function ReportsAnalyticsPage({ onBack }: { onBack: () => void }) {
         ].map((stat, i) => (
           <motion.div
             key={i}
-            initial={{ opacity: 0, y: 15, filter: 'blur(5px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            initial={{ opacity: 0, y: 15, }}
+            animate={{ opacity: 1, y: 0, }}
             transition={{ delay: i * 0.04, duration: 0.4 }}
             whileHover={{ y: -3 }}
             className={`glass-card p-4 relative overflow-hidden border ${stat.border}`}
@@ -308,20 +303,21 @@ export function ReportsAnalyticsPage({ onBack }: { onBack: () => void }) {
                         <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                    <XAxis dataKey="name" stroke="rgba(255,255,255,0.3)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11, fontWeight: '600' }} />
-                    <YAxis stroke="rgba(255,255,255,0.3)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11, fontWeight: '600' }} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                    <XAxis dataKey="name" stroke="var(--border)" tick={{ fill: 'var(--muted-foreground)', fontSize: 11, fontWeight: '600' }} />
+                    <YAxis stroke="var(--border)" tick={{ fill: 'var(--muted-foreground)', fontSize: 11, fontWeight: '600' }} />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: 'rgba(15, 23, 42, 0.95)',
-                        border: '1px solid rgba(255,255,255,0.1)',
+                        backgroundColor: 'var(--popover)',
+                        border: '1px solid var(--border)',
                         borderRadius: '16px',
-                        color: '#fff',
+                        color: 'var(--foreground)',
                         fontSize: '11px',
                         fontWeight: '600',
                       }}
+                      itemStyle={{ color: 'var(--foreground)' }}
                     />
-                    <Legend wrapperStyle={{ fontSize: 11, fontWeight: '600', color: '#fff' }} />
+                    <Legend wrapperStyle={{ fontSize: 11, fontWeight: '600', color: 'var(--foreground)' }} />
                     <Area type="monotone" dataKey="present" name="Present %" stroke="#10b981" fillOpacity={1} fill="url(#colorPresent)" strokeWidth={2} />
                     <Area type="monotone" dataKey="absent" name="Absent %" stroke="#ef4444" fillOpacity={1} fill="url(#colorAbsent)" strokeWidth={2} />
                   </AreaChart>
@@ -339,19 +335,20 @@ export function ReportsAnalyticsPage({ onBack }: { onBack: () => void }) {
               <div className="flex flex-col items-center justify-center flex-1">
                 <ResponsiveContainer width="100%" height={240}>
                   <PieChart>
-                    <Pie data={leaveTypeData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={75} innerRadius={50} paddingAngle={4} label={{ fill: '#fff', fontSize: 10, fontWeight: '600' }}>
+                    <Pie data={leaveTypeData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={75} innerRadius={50} paddingAngle={4} label={{ fill: 'var(--foreground)', fontSize: 10, fontWeight: '600' }}>
                       {leaveTypeData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: 'rgba(15, 23, 42, 0.95)',
-                        border: '1px solid rgba(255,255,255,0.1)',
+                        backgroundColor: 'var(--popover)',
+                        border: '1px solid var(--border)',
                         borderRadius: '12px',
                         fontSize: '11px',
-                        color: '#fff',
+                        color: 'var(--foreground)',
                       }}
+                      itemStyle={{ color: 'var(--foreground)' }}
                     />
                     <Legend wrapperStyle={{ fontSize: 10, fontWeight: '600' }} />
                   </PieChart>
@@ -595,19 +592,21 @@ export function ReportsAnalyticsPage({ onBack }: { onBack: () => void }) {
             <div>
               <ResponsiveContainer width="100%" height={350}>
                 <LineChart data={revenueData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                  <XAxis dataKey="name" stroke="rgba(255,255,255,0.3)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11, fontWeight: '600' }} />
-                  <YAxis stroke="rgba(255,255,255,0.3)" tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11, fontWeight: '600' }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                  <XAxis dataKey="name" stroke="var(--border)" tick={{ fill: 'var(--muted-foreground)', fontSize: 11, fontWeight: '600' }} />
+                  <YAxis stroke="var(--border)" tick={{ fill: 'var(--muted-foreground)', fontSize: 11, fontWeight: '600' }} />
                   <Tooltip
                     formatter={(value) => [`$${(value as number).toLocaleString()}`, 'Revenue']}
                     contentStyle={{
-                      backgroundColor: 'rgba(15, 23, 42, 0.95)',
-                      border: '1px solid rgba(255,255,255,0.1)',
+                      backgroundColor: 'var(--popover)',
+                      border: '1px solid var(--border)',
                       borderRadius: '12px',
                       fontSize: '11px',
+                      color: 'var(--foreground)'
                     }}
+                    itemStyle={{ color: 'var(--foreground)' }}
                   />
-                  <Legend wrapperStyle={{ fontSize: 11, fontWeight: '600' }} />
+                  <Legend wrapperStyle={{ fontSize: 11, fontWeight: '600', color: 'var(--foreground)' }} />
                   <Line type="monotone" dataKey="revenue" name="Total Revenue ($)" stroke="#10b981" strokeWidth={3} dot={{ r: 6, fill: '#10b981', stroke: '#fff', strokeWidth: 2 }} />
                 </LineChart>
               </ResponsiveContainer>
@@ -615,6 +614,6 @@ export function ReportsAnalyticsPage({ onBack }: { onBack: () => void }) {
           </div>
         </TabsContent>
       </Tabs>
-    </motion.div>
+    </div>
   );
 }

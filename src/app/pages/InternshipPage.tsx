@@ -71,9 +71,9 @@ export function InternshipPage({ onBack }: InternshipPageProps) {
     <div className="space-y-6">
       {/* Header */}
       <motion.div
-        initial={{ opacity: 0, y: -20, filter: 'blur(10px)' }}
-        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-        transition={{ duration: 0.6 }}
+        initial={{ opacity: 0, y: -20, }}
+        animate={{ opacity: 1, y: 0, }}
+        transition={{ duration: 0.25 }}
         className="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
       >
         <div className="flex items-center gap-3">
@@ -115,8 +115,8 @@ export function InternshipPage({ onBack }: InternshipPageProps) {
         ].map((stat, i) => (
           <motion.div
             key={i}
-            initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            initial={{ opacity: 0, y: 20, }}
+            animate={{ opacity: 1, y: 0, }}
             transition={{ delay: i * 0.05, duration: 0.5 }}
             whileHover={{ y: -4 }}
             className="glass-card p-5 relative overflow-hidden"
@@ -192,8 +192,8 @@ export function InternshipPage({ onBack }: InternshipPageProps) {
             return (
               <motion.div
                 key={app.id}
-                initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
-                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                initial={{ opacity: 0, y: 20, }}
+                animate={{ opacity: 1, y: 0, }}
                 transition={{ delay: i * 0.04, duration: 0.5 }}
                 whileHover={{ y: -4 }}
                 className="group relative cursor-default"

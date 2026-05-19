@@ -67,9 +67,9 @@ export function StatCard({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30, filter: 'blur(10px)' }}
-      animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-      transition={{ duration: 0.6, delay, ease: 'easeOut' }}
+      initial={{ opacity: 0, y: 30, }}
+      animate={{ opacity: 1, y: 0, }}
+      transition={{ duration: 0.25, delay, ease: 'easeOut' }}
       whileHover={{ y: -6, scale: 1.02 }}
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}

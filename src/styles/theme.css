@@ -152,11 +152,20 @@
   body {
     @apply bg-background text-foreground;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   html {
     font-size: var(--font-size);
     scroll-behavior: smooth;
+  }
+
+  main, .overflow-y-auto {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
   }
 
   h1 { font-size: var(--text-2xl); font-weight: 700; line-height: 1.25; }
@@ -177,7 +186,10 @@
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border);
   border-radius: 1.25rem;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  will-change: transform, border-color, box-shadow;
 }
 
 .dark .glass-card {
@@ -234,6 +246,9 @@
   pointer-events: none;
   animation: float-orb 12s ease-in-out infinite;
   z-index: 0;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
 }
 
 .dark .orb { opacity: 0.12; }

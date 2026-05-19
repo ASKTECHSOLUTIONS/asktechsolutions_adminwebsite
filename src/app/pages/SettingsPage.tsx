@@ -36,9 +36,9 @@ export function SettingsPage({ onBack }: SettingsPageProps) {
     <div className="space-y-6 max-w-4xl">
       {/* Header */}
       <motion.div
-        initial={{ opacity: 0, y: -20, filter: 'blur(10px)' }}
-        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-        transition={{ duration: 0.6 }}
+        initial={{ opacity: 0, y: -20, }}
+        animate={{ opacity: 1, y: 0, }}
+        transition={{ duration: 0.25 }}
         className="flex items-center gap-3"
       >
         {onBack && (
@@ -60,9 +60,9 @@ export function SettingsPage({ onBack }: SettingsPageProps) {
       </motion.div>
 
       <motion.div
-        initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
-        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-        transition={{ delay: 0.1, duration: 0.6 }}
+        initial={{ opacity: 0, y: 20, }}
+        animate={{ opacity: 1, y: 0, }}
+        transition={{ delay: 0.1, duration: 0.25 }}
       >
         <Tabs defaultValue="company">
           <TabsList className="bg-white/5 border border-white/10 rounded-2xl p-1 h-auto flex-wrap gap-1 mb-6 text-white">

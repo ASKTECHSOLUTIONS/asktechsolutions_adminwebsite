@@ -77,9 +77,9 @@ export function MeetingManagementPage({ onBack }: MeetingManagementPageProps) {
     <div className="space-y-6">
       {/* Header */}
       <motion.div
-        initial={{ opacity: 0, y: -20, filter: 'blur(10px)' }}
-        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-        transition={{ duration: 0.6 }}
+        initial={{ opacity: 0, y: -20, }}
+        animate={{ opacity: 1, y: 0, }}
+        transition={{ duration: 0.25 }}
         className="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
       >
         <div className="flex items-center gap-3">
@@ -121,8 +121,8 @@ export function MeetingManagementPage({ onBack }: MeetingManagementPageProps) {
         ].map((stat, i) => (
           <motion.div
             key={i}
-            initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            initial={{ opacity: 0, y: 20, }}
+            animate={{ opacity: 1, y: 0, }}
             transition={{ delay: i * 0.05, duration: 0.5 }}
             whileHover={{ y: -4 }}
             className="glass-card p-5 relative overflow-hidden"
@@ -144,8 +144,8 @@ export function MeetingManagementPage({ onBack }: MeetingManagementPageProps) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Upcoming Meetings Sidebar */}
         <motion.div
-          initial={{ opacity: 0, x: -20, filter: 'blur(10px)' }}
-          animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+          initial={{ opacity: 0, x: -20, }}
+          animate={{ opacity: 1, x: 0, }}
           transition={{ delay: 0.2 }}
           className="glass-card p-5 h-fit relative overflow-hidden"
         >
@@ -244,8 +244,8 @@ export function MeetingManagementPage({ onBack }: MeetingManagementPageProps) {
                 return (
                   <motion.div
                     key={meeting.id}
-                    initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
-                    animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                    initial={{ opacity: 0, y: 20, }}
+                    animate={{ opacity: 1, y: 0, }}
                     transition={{ delay: i * 0.05, duration: 0.5 }}
                     whileHover={{ y: -3 }}
                     className="group relative cursor-default"

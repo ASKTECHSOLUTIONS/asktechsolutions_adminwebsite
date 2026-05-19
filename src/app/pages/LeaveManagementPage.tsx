@@ -180,12 +180,7 @@ export function LeaveManagementPage({ onBack }: { onBack: () => void }) {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
-      animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-      transition={{ duration: 0.6 }}
-      className="space-y-6"
-    >
+    <div className="space-y-6">
       {/* Page Header */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-4">
@@ -237,8 +232,8 @@ export function LeaveManagementPage({ onBack }: { onBack: () => void }) {
         ].map((stat, i) => (
           <motion.div
             key={i}
-            initial={{ opacity: 0, y: 15, filter: 'blur(5px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            initial={{ opacity: 0, y: 15, }}
+            animate={{ opacity: 1, y: 0, }}
             transition={{ delay: i * 0.04, duration: 0.4 }}
             whileHover={{ y: -3 }}
             className={`glass-card p-4.5 relative overflow-hidden border ${stat.border}`}
@@ -564,6 +559,6 @@ export function LeaveManagementPage({ onBack }: { onBack: () => void }) {
           </div>
         </TabsContent>
       </Tabs>
-    </motion.div>
+    </div>
   );
 }

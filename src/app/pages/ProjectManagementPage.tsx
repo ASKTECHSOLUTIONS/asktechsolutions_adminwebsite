@@ -81,9 +81,9 @@ export function ProjectManagementPage({ onBack }: ProjectManagementPageProps) {
     <div className="space-y-6">
       {/* Header */}
       <motion.div
-        initial={{ opacity: 0, y: -20, filter: 'blur(10px)' }}
-        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-        transition={{ duration: 0.6 }}
+        initial={{ opacity: 0, y: -20, }}
+        animate={{ opacity: 1, y: 0, }}
+        transition={{ duration: 0.25 }}
         className="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
       >
         <div className="flex items-center gap-3">
@@ -125,8 +125,8 @@ export function ProjectManagementPage({ onBack }: ProjectManagementPageProps) {
         ].map((stat, i) => (
           <motion.div
             key={i}
-            initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            initial={{ opacity: 0, y: 20, }}
+            animate={{ opacity: 1, y: 0, }}
             transition={{ delay: i * 0.05, duration: 0.5 }}
             whileHover={{ y: -4 }}
             className="glass-card p-5 relative overflow-hidden"
@@ -147,8 +147,8 @@ export function ProjectManagementPage({ onBack }: ProjectManagementPageProps) {
 
       {/* Budget Overview */}
       <motion.div
-        initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
-        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+        initial={{ opacity: 0, y: 20, }}
+        animate={{ opacity: 1, y: 0, }}
         transition={{ delay: 0.2 }}
         className="glass-card p-6 relative overflow-hidden"
       >
@@ -229,9 +229,9 @@ export function ProjectManagementPage({ onBack }: ProjectManagementPageProps) {
             return (
               <motion.div
                 key={project.id}
-                initial={{ opacity: 0, y: 30, filter: 'blur(10px)' }}
-                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                transition={{ delay: i * 0.05, duration: 0.6 }}
+                initial={{ opacity: 0, y: 30, }}
+                animate={{ opacity: 1, y: 0, }}
+                transition={{ delay: i * 0.05, duration: 0.25 }}
                 whileHover={{ y: -6, scale: 1.01 }}
                 className="group relative cursor-default"
               >
